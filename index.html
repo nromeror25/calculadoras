@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Comparador Erbitux vs Vectibix</title>
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #333;
+    }
+
+/* Barra superior (reemplaza la barra lateral) */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;                       /* alto del header */
+  background: linear-gradient(180deg, #1e3a8a, #2563eb); /* mismos colores */
+  color: #fff;
+  display: flex;                      /* ponemos todo en línea */
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+/* empuja los links a la derecha */
+.sidebar-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  margin-right: auto;                 /* <- clave para alinear los links a la derecha */
+}
+
+.nav-links {                          /* contenedor de enlaces */
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;                    /* por si no caben en pantallas pequeñas */
+}
+
+.sidebar a {
+  display: inline-block;              /* ya no en bloque vertical */
+  padding: 8px 12px;
+  color: #e0e7ff;
+  text-decoration: none;
+  font-size: 1rem;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.sidebar a i {
+  margin-right: 8px;
+  color: #93c5fd;
+}
+
+.sidebar a:hover {
+  background-color: rgba(255,255,255,0.12); /* efecto hover suave */
+  color: #fff;
+  border-left: none;                  /* quitamos la “marca” lateral del diseño anterior */
+}
+
+    /* Contenido */
+    .content {
+  margin-left: 0;     /* antes 240px: ya no hace falta */
+  margin-top: 90px;   /* espacio bajo la barra fija */
+  padding: 30px;
+}
+
+    .content h1 {
+      color: #1e3a8a;
+      margin-bottom: 15px;
+    }
+.main-title {
+  padding: 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1e3a8a;
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+    .intro, .section {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .container {
+  display: flex;
+  gap: 20px;
+  align-items: stretch; /* <- importante para que todas las cards tengan la misma altura */
+}
+.card {
+  flex: 1;
+  display: flex;
+  flex-direction: column; /* para que el contenido se ordene bien */
+}
+
+    .results {
+      background: #e8f4ff;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 10px;
+      font-size: 14px;
+      border: 1px solid #cce0ff;
+    }
+
+   /* Inputs con estilo más cool */
+input {
+  width: 80px;
+  padding: 6px;
+  margin: 5px 0;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #f0f9ff;
+  transition: all 0.3s;
+}
+
+input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 6px rgba(37,99,235,0.4);
+  background: #e0f2fe;
+}
+
+/* Cards más modernas */
+.card {
+  background: #f9faff;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+/* Botón con gradiente */
+button {
+  background: linear-gradient(90deg, #1e3a8a, #2563eb);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    padding-top: 60px; 
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.8);
+  }
+ .modal-content {
+  margin: auto;
+  display: block;
+  max-width: 90%;
+  max-height: 85%;
+  border-radius: 12px;
+  cursor: grab;                /* para arrastrar */
+  transition: transform 0.3s ease;
+}
+
+.modal-content:active {
+  cursor: grabbing;
+}
+.close {
+  position: absolute;
+  top: 20px; 
+  right: 35px;
+  color: white;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
+#caption {
+  margin: 15px auto;
+  text-align: center;
+  color: #f1f1f1;
+  font-size: 18px;
+}
+
+.comparativos{
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+}
+.grafico-col{
+  flex:1 1 380px;   /* crece, encoge y ancho base para que sean responsivas */
+  min-width:300px;
+}
+
+  </style>
+</head>
+<body>
+
+ <!-- Sidebar -->
+<div class="sidebar">
+  <h2 class="sidebar-title"><i class="fa-solid fa-chart-column"></i> Comparador</h2>
+  <div class="nav-links">
+    <a href="#intro"><i class="fa-solid fa-book-open"></i> Introducción</a>
+    <a href="#resultados-clinicos"><i class="fa-solid fa-chart-line"></i> Resultados clínicos</a>
+    <a href="#calculos"><i class="fa-solid fa-calculator"></i> Cálculos iniciales</a>
+    <a href="#resultados-medicamento"><i class="fa-solid fa-pills"></i> Resultados medicamento</a>
+    <a href="#comparacion"><i class="fa-solid fa-scale-balanced"></i> Comparación</a>
+  </div>
+</div>
+
+ 
+
+  <div class="content">
+
+<div class="main-title">
+  🌟 Impacto económico en Cáncer colorectal: Erbitux vs Vectibix
+  <p style="margin-top:8px; font-size:1rem; font-weight:normal; color:#374151; font-style:italic;">
+    🎯 Objetivo: Evaluar el impacto económico del cáncer colorrectal en Colombia.
+  </p>
+ <div class="nav-buttons">
+    <a href="#intro"><button><i class="fa-solid fa-book-open"></i> Introducción</button></a>
+    <a href="#resultados-clinicos"><button><i class="fa-solid fa-chart-line"></i> Resultados clínicos</button></a>
+    <a href="#calculos"><button><i class="fa-solid fa-calculator"></i> Cálculos iniciales</button></a>
+    <a href="#resultados-medicamento"><button><i class="fa-solid fa-pills"></i> Resultados medicamento</button></a>
+    <a href="#comparacion"><button><i class="fa-solid fa-scale-balanced"></i> Comparación</button></a>
+    </div>
+</div>
+
+
+
+<!-- Estilos -->
+<style>
+  .nav-buttons {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav-buttons .pill {
+    background: linear-gradient(90deg, #1e3a8a, #2563eb);
+    color: #fff;
+    border: none;
+    border-radius: 50px; /* <- hace el efecto “pill” */
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  .nav-buttons .pill:hover {
+    background: linear-gradient(90deg, #2563eb, #3b82f6);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+  }
+
+  .main-title {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .objetivo {
+    font-size: 14px;
+    margin-top: 8px;
+    color: #444;
+  }
+
+  html {
+    scroll-behavior: smooth; /* scroll suave al hacer clic */
+  }
+</style>
+    <!-- Introducción -->
+    <section id="intro" class="intro">
+      
+      <h2><i class="fa-solid fa-book-open"></i> Introducción</h2>
+      <p>
+        El cáncer de colon y recto representa un importante desafío en Colombia: se
+        detecta mayoritariamente en edades adultas, aún es frecuente en estadios
+        invasivos, cuenta con supervivencia limitada y muestra disparidades regionales.
+      </p>
+      <p>
+        En el país, al 2025 se reportan más de <b>51 mil personas</b> viviendo con la
+        enfermedad y cada año se diagnostican más de <b>4 mil casos nuevos</b>, con una
+        mortalidad que supera las <b>3.700 muertes anuales</b>.
+      </p>
+      <p>
+        A continuación, se presenta la evolución de estas medidas y luego un comparador de
+        costos de los principales tratamientos biológicos utilizados en esta indicación.
+      </p>
+      <div id="graficoEpidemiologia"></div>
+      <div style="text-align:right; font-size:12px; color:#555; margin-top:6px;">
+  Fuente: Cuenta de Alto Costo</div>
+    </section>
+
+
+<!-- 🚑 Sección de Resultados Clínicos -->
+<section id="resultados-clinicos" class="section">
+  <h2><i class="fa-solid fa-chart-line"></i> Resultados Clínicos</h2>  
+
+  <p>
+    La mayoría de los <strong>eventos adversos dermatológicos asociados a Erbitux®</strong> aparecen en las primeras 3 semanas de tratamiento, siendo <strong>predecibles, manejables y reversibles</strong>.
+  </p>
+
+  <!-- Gráfico de evolución de eventos -->
+  <div class="grafico-eventos">
+    <!-- Línea de semanas -->
+    <div class="timeline">
+      <div class="semana" style="left:0%;">1</div>
+      <div class="semana" style="left:12%;">2</div>
+      <div class="semana" style="left:22%;">3</div>
+      <div class="semana" style="left:32%;">4</div>
+      <div class="semana" style="left:42%;">5</div>
+      <div class="semana" style="left:52%;">6</div>
+      <div class="semana" style="left:62%;">7</div>
+      <div class="semana" style="left:72%;">8</div>
+      <div class="semana" style="left:82%;">9</div>
+    </div>
+
+    <!-- Curva + Bandas de síntomas -->
+    <svg width="100%" height="200">
+      <!-- Bandas de aparición de síntomas -->
+      <rect x="0" y="0" width="25%" height="200" fill="rgba(255, 204, 128, 0.4)" />
+      <rect x="42%" y="0" width="10%" height="200" fill="rgba(255, 224, 178, 0.5)" />
+      <rect x="62%" y="0" width="10%" height="200" fill="rgba(255, 243, 224, 0.6)" />
+      <rect x="72%" y="0" width="10%" height="200" fill="rgba(255, 255, 224, 0.7)" />
+
+      <!-- Curva -->
+      <path d="M0,150 Q100,40 200,70 T400,110 T600,130 T800,150"
+            stroke="red" fill="transparent" stroke-width="2"/>
+
+      <!-- Etiquetas -->
+      <text x="30" y="40" font-size="12" fill="black">Erupción</text>
+      <text x="190" y="80" font-size="12" fill="black">Prurito</text>
+      <text x="420" y="120" font-size="12" fill="black">Xerosis</text>
+      <text x="600" y="130" font-size="12" fill="black">Grietas</text>
+      <text x="720" y="150" font-size="12" fill="black">Paroniquias</text>
+    </svg>
+  </div>
+
+  <!-- Lista explicativa -->
+  <ul>
+    <li><b>Erupción papulopustular (rash acneiforme)</b> en semanas 1-3</li>
+    <li><b>Sequedad cutánea (Xerosis)</b> desde semana 5</li>
+    <li><b>Grietas</b> desde semana 7</li>
+    <li><b>Paroniquias</b> desde semana 8</li>
+  </ul>
+
+  <p>
+    <strong>Erbitux® + FOLFOX/FOLFIRI</strong> tiene un perfil de eventos adversos predecible, manejable y reversible.
+  </p>
+</section>
+
+<!-- 🎨 Estilos -->
+<style>
+.grafico-eventos {
+  position: relative;
+  width: 100%;
+  background: #fff3e0;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.timeline {
+  position: relative;
+  width: 100%;
+  height: 20px;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #ccc;
+}
+
+.semana {
+  position: absolute;
+  top: 0;
+  font-size: 12px;
+  transform: translateX(-50%);
+  font-weight: bold;
+  color: #333;
+}
+</style>
+
+    <!-- Cálculos iniciales -->
+    <section id="calculos" class="section">
+      <h2><i class="fa-solid fa-calculator"></i> Cálculos iniciales</h2>
+      <p style="font-size:14px; color:#444; margin-bottom:15px;">
+    ℹ️ En esta sección se ingresan los datos relativos al paciente, a los precios y a las dosis para calcular el costo del tratamiento.El precio se toma con base en SISMED, las dosis se ajustan de acuerdo con la presentación.
+  </p>
+      <div class="container">
+        <div class="card" style="background-color:#e0f7fa;">
+          <h3>Datos del paciente</h3>
+          Peso (kg): <input type="number" id="peso" value="70"><br>
+          Talla (cm): <input type="number" id="talla" value="170"><br>
+          Número de pacientes: <input type="number" id="numPacientes" value="5">
+        </div>
+        <div class="card" style="background-color:#fff3e0;">
+          <h3>Erbitux®</h3>
+          Dosis (mg/m²): <input type="number" id="dosisErbitux" value="500"><br>
+          Precio vial 100mg: <input type="number" id="precioErb100" value="649000"><br>
+        </div>
+        <div class="card" style="background-color:#e8eaf6;">
+          <h3>Vectibix®</h3>
+          Dosis (mg/kg): <input type="number" id="dosisVectibix" value="6"><br>
+          Precio vial 100mg: <input type="number" id="precioVec100" value="1366796"><br>
+        </div>
+      </div>
+      <div style="text-align:center; margin-top:15px;">
+        <button onclick="calcular()">Calcular</button>
+      </div>
+    </section>
+
+   <section id="resultados-medicamento" class="section">
+  <h2><i class="fa-solid fa-pills"></i> Resultados medicamento</h2>
+
+  <div class="container">
+  <!-- Card Erbitux -->
+  <div class="card" id="cardErbitux" style="background-color:#ffd280; color:#000;">
+    <h3>💉 Erbitux</h3>
+    <div class="info"><span class="icon">💊</span> <strong>Presentaciones:</strong> Vial 20 ml / 100 mg y Vial de 5ml /20 mg</div>
+    <div class="info"><span class="icon">ℹ️</span> <strong>Indicaciones:</strong> Cáncer colorrectal metastásico, carcinoma de cabeza y cuello.</div>
+    <div class="info"><span class="icon">📜</span> <strong>Regulación:</strong> ✔ Circular 19 de 2024</div>
+    <div class="info"><span class="icon">✅</span> <strong>UPC:</strong> ✔ Financiado UPC</div>
+    
+    <!-- Resultados dinámicos -->
+    <div class="results" id="resErbitux"></div>
+  </div>
+
+    <!-- Card Vectibix -->
+  <div class="card" id="cardVectibix" style="background-color:#ccccff; color:#000;">
+    <h3>💊 Vectibix</h3>
+    <div class="info"><span class="icon">💊</span> <strong>Presentación:</strong> Vial 5 mg/ml (100 mg / 20 ml)</div>
+    <div class="info"><span class="icon">ℹ️</span> <strong>Indicaciones:</strong> Cáncer colorrectal metastásico con RAS no mutado.</div>
+    <div class="info"><span class="icon">📜</span> <strong>Regulación:</strong> ✔ Circular 19 de 2024</div>
+    <div class="info"><span class="icon">✅</span> <strong>UPC:</strong> ✔ Financiado UPC</div>
+    
+    <!-- Resultados dinámicos -->
+    <div class="results" id="resVectibix"></div>
+  </div>
+
+
+    <!-- Tarjeta Cohorte -->
+    <div class="card">
+      <h3>👥 Cohorte</h3>
+      <p class="info-text">
+      Este cálculo muestra el costo total del tratamiento para el número de pacientes seleccionados durante 8 meses.
+      </p>
+      <div class="results" id="resultadoCohorte">
+      </div>
+    </div>
+
+</section>
+
+<section id="comparacion" class="section">
+   <h2><i class="fa-solid fa-scale-balanced"></i> Comparación</h2>
+
+  <div class="comparativos">
+  <p style="font-size:14px; color:#444; margin-bottom:15px;">
+     📊 Esta sección compara el costo total del tratamiento entre Erbitux® y Vectibix®, 
+     tanto para un paciente individual como para la cohorte seleccionada. 
+     La línea roja indica la diferencia de costo entre ambos medicamentos, mostrada 
+     en valor absoluto y porcentaje.
+   </p>
+
+    <div class="grafico-col">
+      <h3 style="margin:0 0 10px;">1 paciente (8 meses)</h3>
+      <div id="graficoPaciente" style="height:420px;"></div>
+    </div>
+
+    <div class="grafico-col">
+      <h3 style="margin:0 0 10px;">Cohorte (8 meses)</h3>
+      <div id="graficoCohorte" style="height:420px;"></div>
+    </div>
+  </div>
+</section>
+
+  </div>
+
+  <script>
+
+  // --- Gráfico epidemiología ---
+  const anios = [2018, 2019, 2020, 2021, 2022, 2023, 2024];
+  const PCNR = [6.36, 4.51, 6.81, 6.40, 7.54, 8.64, 7.95];
+  const Prevalencia = [38.03, 37.59, 46.33, 52.75, 57.53, 63.03, 80.45];
+  const Mortalidad = [4.04, 3.75, 4.76, 6.03, 5.88, 6.18, 7.04];
+
+  Plotly.newPlot('graficoEpidemiologia', [
+    {x: anios, y: PCNR, mode: 'lines+markers', name: 'PCNR', line:{color:'#d63384'}},
+    {x: anios, y: Prevalencia, mode: 'lines+markers', name: 'Prevalencia', line:{color:'#1e3a8a'}},
+    {x: anios, y: Mortalidad, mode: 'lines+markers', name: 'Mortalidad', line:{color:'#6c757d'}}
+  ], {
+    title: 'Morbimortalidad cáncer colon y recto, Colombia 2018-2024',
+    xaxis:{title:'Año'},
+    yaxis:{title:'Casos por 100.000 hab'},
+    legend:{orientation:'h', y:-0.2},
+    margin:{t:50, b:80}
+  });
+
+  // --- Funciones de cálculo ---
+  function calcularBSA(peso, talla) {
+    return Math.sqrt((peso * talla) / 3600);
+  }
+
+  function calcular() {
+    const peso = parseFloat(document.getElementById('peso').value) || 0;
+    const talla = parseFloat(document.getElementById('talla').value) || 0;
+    const numPacientes = parseInt(document.getElementById('numPacientes').value) || 0;
+
+    // Erbitux
+    const dosisErb = parseFloat(document.getElementById('dosisErbitux').value) || 0; // mg/m2
+    const precioErb100 = parseFloat(document.getElementById('precioErb100').value) || 0;
+    const bsa = calcularBSA(peso, talla);
+    const mgErb = bsa * dosisErb;                  // mg total por paciente
+    const vialesErb = Math.ceil(mgErb / 100);      // viales redondeados hacia arriba
+    const totalErb = vialesErb * precioErb100;     // costo por administración
+    const mensualErb = totalErb * 2;               // (tu lógica previa)
+    const costo8mErb = mensualErb * 8;
+    const totalCohorte8mErb = costo8mErb * numPacientes;
+
+    document.getElementById("resErbitux").innerHTML = `
+      <div><strong>Dosis:</strong> ${mgErb.toFixed(1)} mg</div>
+      <div><strong>Costo 8 meses:</strong> $${costo8mErb.toLocaleString()}</div>
+      <div><strong>Costo tto/mes:</strong> $${(costo8mErb/8).toLocaleString()}</div>
+      <div><strong>Número de viales:</strong> ${vialesErb}</div>
+    `;
+
+    // Vectibix
+    const dosisVec = parseFloat(document.getElementById('dosisVectibix').value) || 0; // mg/kg
+    const precioVec100 = parseFloat(document.getElementById('precioVec100').value) || 0;
+    const mgVec = peso * dosisVec;                 // mg total por paciente
+    const vialesVec = Math.ceil(mgVec / 100);
+    const totalVec = vialesVec * precioVec100;
+    const mensualVec = totalVec * 2;
+    const costo8mVec = mensualVec * 8;
+    const totalCohorte8mVec = costo8mVec * numPacientes;
+
+    document.getElementById("resVectibix").innerHTML = `
+      <div><strong>Dosis:</strong> ${mgVec.toFixed(1)} mg</div>
+      <div><strong>Costo 8 meses:</strong> $${costo8mVec.toLocaleString()}</div>
+      <div><strong>Costo tto/mes:</strong> $${(costo8mVec/8).toLocaleString()}</div>
+      <div><strong>Número de viales:</strong> ${vialesVec}</div>
+    `;
+
+    // Cohorte
+    document.getElementById("resultadoCohorte").innerHTML = `
+      <div><strong>Cohorte de ${numPacientes} pacientes</strong></div>
+      <div>Erbitux - 8 meses: $${totalCohorte8mErb.toLocaleString()}</div>
+      <div>Vectibix - 8 meses: $${totalCohorte8mVec.toLocaleString()}</div>
+    `;
+
+    // --- Gráfico comparativo: reemplazo por dos gráficos ---
+    // Asegúrate de tener en el HTML: div#graficoPaciente y div#graficoCohorte
+   let diferenciaPaciente = Math.abs(costo8mErb - costo8mVec);
+   let porcentajeDiferencia = ((diferenciaPaciente / Math.max(costo8mErb, costo8mVec)) * 100).toFixed(1);
+let diferenciaCohorte = Math.abs(totalCohorte8mErb - totalCohorte8mVec);
+let porcentajeDiferenciaCohorte = ((diferenciaCohorte / Math.max(totalCohorte8mErb, totalCohorte8mVec)) * 100).toFixed(1);
+
+Plotly.newPlot('graficoPaciente', [
+  {
+    x: ['Erbitux','Vectibix'],
+    y: [costo8mErb, costo8mVec],
+    type: 'bar',
+    name: 'Costo 8 meses (1 paciente)',
+    marker: {color: ['#FFA500', '#1e3a8a']},
+    text: [costo8mErb.toLocaleString(), costo8mVec.toLocaleString()],
+    textposition: 'auto'
+  }
+], {
+  title: 'Costo por 1 paciente (8 meses)',
+  yaxis: {title: 'Costo ($)'},
+  shapes: [
+    {
+      type: 'line',
+      x0: 0, x1: 1,
+      y0: Math.max(costo8mErb, costo8mVec) * 1.05,
+      y1: Math.max(costo8mErb, costo8mVec) * 1.05,
+      line: {color: 'red', width: 2, dash: 'dot'}
+    }
+  ],
+  annotations: [
+    {
+      x: 0.5,
+      y: Math.max(costo8mErb, costo8mVec) * 1.08,
+      text: `Dif: $${diferenciaPaciente.toLocaleString()} (${porcentajeDiferencia}%)`,
+      showarrow: false,
+      font: {color: 'red', size: 14}
+    }
+  ]
+});
+
+
+// ---- Gráfico 2: Cohorte ----
+Plotly.newPlot('graficoCohorte', [
+  {
+    x: ['Erbitux','Vectibix'],
+    y: [totalCohorte8mErb, totalCohorte8mVec],
+    type: 'bar',
+    name: `Costo 8 meses (Cohorte ${numPacientes})`,
+    marker: {color: ['#FFA500', '#1e3a8a']},  // naranja y azul
+    text: [totalCohorte8mErb.toLocaleString(), totalCohorte8mVec.toLocaleString()],
+    textposition: 'auto'
+  }
+], {
+  title: `Costo por cohorte (${numPacientes} pacientes, 8 meses)`,
+  yaxis: {title: 'Costo ($)'},
+  shapes: [
+    {
+      type: 'line',
+      x0: 0, x1: 1,
+      y0: Math.max(totalCohorte8mErb, totalCohorte8mVec) * 1.05,
+      y1: Math.max(totalCohorte8mErb, totalCohorte8mVec) * 1.05,
+      line: {color: 'red', width: 2, dash: 'dot'}
+    }
+  ],
+  annotations: [
+    {
+      x: 0.5,
+      y: Math.max(totalCohorte8mErb, totalCohorte8mVec) * 1.08,
+      text: `Dif: $${diferenciaCohorte.toLocaleString()} (${porcentajeDiferenciaCohorte}%)`,
+      showarrow: false,
+      font: {color: 'red', size: 14}
+    }
+  ]
+});
+
+  } // <-- aquí cerramos correctamente la función calcular
+
+ </script>
+
+
+</body>
+</html>
