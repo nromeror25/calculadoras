@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Impacto Económico: Erbitux® vs Vectibix®</title>
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    /* === ESTILOS BASE === */
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      background-color: #f5f7fa;
+      color: #1e293b;
+    }
+
+    h2 {
+      color: #1e3a8a;
+      margin-top: 0;
+    }
+
+    /* === BARRA SUPERIOR === */
+    .navbar {
+      background: linear-gradient(90deg, #0f172a, #1e3a8a, #2563eb);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 30px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 10;
+      height: 65px;
+    }
+
+    .navbar h1 {
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+    }
+
+    .navbar img {
+      height: 36px;
+    }
+
+    .nav-links a {
+      color: #dbeafe;
+      text-decoration: none;
+      margin-left: 15px;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    /* === HERO BANNER === */
+    .hero {
+      margin-top: 65px;
+      position: relative;
+      height: 340px;
+      background: url('https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: #e0f2fe;
+    }
+
+    /* === CONTENIDO === */
+    .content {
+      padding: 40px 60px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    section {
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    /* === SECCIÓN DATOS Y CÁLCULOS === */
+    .datos-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .card {
+      flex: 1;
+      min-width: 260px;
+      background: #f0f4ff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      position: relative;
+    }
+
+    .card h3 {
+      color: #1e3a8a;
+      margin-bottom: 10px;
+      border-bottom: 2px solid #2563eb;
+      display: inline-block;
+      padding-bottom: 4px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      margin-top: 6px;
+      color: #334155;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+      background-color: #f9fafb;
+      margin-top: 3px;
+      transition: all 0.2s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #2563eb;
+      background-color: #eef2ff;
+      box-shadow: 0 0 4px rgba(37,99,235,0.4);
+    }
+
+    .results {
+      background: #eef2ff;
+      border-left: 4px solid #1e3a8a;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    .btn-calcular {
+      display: block;
+      margin: 25px auto 0;
+      background: linear-gradient(90deg, #1e3a8a, #2563eb);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      font-size: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-calcular:hover {
+      background: linear-gradient(90deg, #2563eb, #3b82f6);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    /* === COMPARATIVOS === */
+    .comparativos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .grafico {
+      flex: 1 1 400px;
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    @media (max-width: 768px) {
+      .content { padding: 20px; }
+      .hero { height: 260px; }
+      .hero h2 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- === NAVBAR === -->
+  <div class="navbar">
+    <h1><i class="fa-solid fa-chart-column"></i> Comparador Económico</h1>
+    <div class="nav-links">
+      <a href="#intro">Introducción</a>
+      <a href="#resultados">Resultados clínicos</a>
+      <a href="#calculos">Cálculos</a>
+      <a href="#comparacion">Comparación</a>
+    </div>
+  </div>
+
+  <!-- === HERO CORPORATIVO === -->
+  <section class="hero">
+    <div class="hero-content">
+      <h2>Impacto Económico en Cáncer Colorrectal</h2>
+      <p>Comparador de tratamientos biológicos: Erbitux® vs Vectibix®</p>
+    </div>
+  </section>
+
+  <!-- === CONTENIDO === -->
+  <div class="content">
+
+    <!-- INTRODUCCIÓN -->
+    <section id="intro" class="intro">
+      <h2><i class="fa-solid fa-book-open"></i> Introducción</h2>
+      <p>
+        El cáncer colorrectal representa un desafío sanitario relevante en Colombia. 
+        Cada año se diagnostican más de <b>4.000 casos nuevos</b>, con una mortalidad superior a <b>3.700 personas</b>. 
+        Esta evaluación busca comparar los costos asociados a <b>Erbitux®</b> y <b>Vectibix®</b> bajo condiciones clínicas reales.
+      </p>
+      <div id="graficoEpidemiologia"></div>
+    </section>
+
+<!-- ESTUDIOS CLÍNICOS -->
+<section id="estudios-clinicos">
+  <h2><i class="fa-solid fa-flask"></i> Estudios Clínicos Clave</h2>
+  <div class="estudios-container">
+    
+    <!-- Estudio CRYSTAL -->
+    <div class="burbuja">
+      <h3><i class="fa-solid fa-star"></i> Estudio CRYSTAL (2009)</h3>
+      <p><strong>Objetivo:</strong> Eficacia de cetuximab + FOLFIRI.</p>
+      <p><strong>Resultados:</strong></p>
+      <ul>
+        <li>SG: 24.5 meses (vs 20.7 meses, p=0.004)</li>
+        <li>TRO: 45% (vs 36%, p<0.001)</li>
+      </ul>
+      <p><strong>Seguridad:</strong> Erupciones cutáneas (80%)</p>
+    </div>
+
+    <!-- Estudio OPUS -->
+    <div class="burbuja">
+      <h3><i class="fa-solid fa-star"></i> Estudio OPUS (2009)</h3>
+      <p><strong>Objetivo:</strong> Eficacia de cetuximab + FOLFOX.</p>
+      <p><strong>Resultados:</strong></p>
+      <ul>
+        <li>Tasa de respuesta: 57% (vs 48%)</li>
+        <li>SLP: 9.9 meses (vs 8.0 meses, p=0.03)</li>
+      </ul>
+      <p><strong>Seguridad:</strong> Erupciones cutáneas (70%)</p>
+    </div>
+
+    <!-- Estudio PRIME -->
+    <div class="burbuja">
+      <h3><i class="fa-solid fa-star"></i> Estudio PRIME (2011)</h3>
+      <p><strong>Objetivo:</strong> Cetuximab + FOLFOX.</p>
+      <p><strong>Resultados:</strong></p>
+      <ul>
+        <li>SLP: 9.9 meses (vs 8.4 meses, p=0.007)</li>
+        <li>Tasa de respuesta: 60% (vs 50%)</li>
+      </ul>
+      <p><strong>Seguridad:</strong> Erupciones cutáneas (60-70%)</p>
+    </div>
+
+    <!-- Estudio BREAKWATER -->
+    <div class="burbuja">
+      <h3><i class="fa-solid fa-star"></i> Estudio BREAKWATER</h3>
+      <p><strong>Objetivo:</strong> Cetuximab + Encorafenib (mutación BRAF V600E).</p>
+      <p><strong>Resultados:</strong></p>
+      <ul>
+        <li>SLP: 5.4 meses (vs 2.9 meses, p<0.001)</li>
+        <li>TRO: 64% (vs 20%)</li>
+      </ul>
+      <p><strong>Seguridad:</strong> Rash (70%)</p>
+    </div>
+
+    <!-- Estudio BEACON -->
+    <div class="burbuja">
+      <h3><i class="fa-solid fa-star"></i> Estudio BEACON</h3>
+      <p><strong>Objetivo:</strong> Encorafenib + Cetuximab vs quimioterapia estándar.</p>
+      <p><strong>Resultados:</strong></p>
+      <ul>
+        <li>SG: 9.3 meses (vs 5.4 meses, p<0.001)</li>
+        <li>Tasa de respuesta: 48% (vs 19%)</li>
+      </ul>
+      <p><strong>Seguridad:</strong> Rash (60-70%)</p>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  #estudios-clinicos {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f9fafb;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .estudios-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  .burbuja {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    flex: 0 1 280px; /* Ancho mínimo de las burbujas */
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+  }
+
+  .burbuja:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  }
+
+  .burbuja h3 {
+    color: #1e3a8a;
+    margin-bottom: 10px;
+  }
+
+  .burbuja p, .burbuja ul {
+    margin: 5px 0;
+    font-size: 0.95rem;
+    color: #334155;
+  }
+
+  .fa-star {
+    color: #ffcc00;
+    margin-right: 5px;
+  }
+</style>
+
+    <!-- CÁLCULOS -->
+<!-- CÁLCULOS -->
+<section id="calculos">
+  <h2><i class="fa-solid fa-calculator"></i> Datos del Paciente y Cálculos</h2>
+
+  <div class="datos-container">
+    <div class="card">
+      <h3><i class="fa-solid fa-user"></i> Datos del paciente</h3>
+      <label>Peso (kg)</label>
+      <input type="number" id="peso" value="70">
+      <label>Talla (cm)</label>
+      <input type="number" id="talla" value="170">
+      <label>Número de pacientes</label>
+      <input type="number" id="numPacientes" value="5">
+    </div>
+
+    <div class="card">
+      <h3><i class="fa-solid fa-capsules"></i> Erbitux®️</h3>
+      <p>💊 <strong>Presentaciones:</strong> Vial 20 ml / 100 mg y Vial 5 ml / 20 mg</p>
+      <p>ℹ️ <strong>Indicaciones:</strong> Cáncer colorrectal metastásico, carcinoma de cabeza y cuello.</p>
+      <p>📜 <strong>Regulación:</strong> ✔ Circular 19 de 2024</p>
+      <p>✅ <strong>UPC:</strong> ✔ Financiado UPC</p>
+      <label>Dosis (mg/m²)</label>
+      <input type="number" id="dosisErbitux" value="500">
+      <label>Precio vial 100mg (COP)</label>
+      <input type="number" id="precioErb100" value="649000">
+      <label>Contenido por vial (mg)</label>
+      <input type="number" id="contenidoVialErb" value="100">
+      <div class="results" id="resErbitux"></div>
+    </div>
+
+    <div class="card">
+      <h3><i class="fa-solid fa-capsules"></i> Vectibix®️</h3>
+      <p>💊 <strong>Presentación:</strong> Vial 5 mg/ml (100 mg / 20 ml)</p>
+      <p>ℹ️ <strong>Indicaciones:</strong> Cáncer colorrectal metastásico con RAS no mutado.</p>
+      <p>📜 <strong>Regulación:</strong> ✔ Circular 19 de 2024</p>
+      <p>✅ <strong>UPC:</strong> ✔ Financiado UPC</p>
+      <label>Dosis (mg/kg)</label>
+      <input type="number" id="dosisVectibix" value="6">
+      <label>Precio vial 100mg (COP)</label>
+      <input type="number" id="precioVec100" value="1366796">
+      <div class="results" id="resVectibix"></div>
+    </div>
+  </div>
+
+  <button class="btn-calcular" onclick="calcular()">Calcular</button>
+</section>
+
+<style>
+  .info {
+    background: #eef2ff;
+    border-left: 4px solid #1e3a8a;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-size: 0.9rem;
+  }
+</style>
+
+
+    <!-- COMPARACIÓN -->
+    <section id="comparacion">
+      <h2><i class="fa-solid fa-scale-balanced"></i> Comparación de Costos</h2>
+      <div class="comparativos">
+        <div class="grafico">
+          <h3>1 paciente (8 meses)</h3>
+          <div id="graficoPaciente"></div>
+        </div>
+        <div class="grafico">
+          <h3>Cohorte (8 meses)</h3>
+          <div id="graficoCohorte"></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- === SCRIPTS === -->
+  <script>
+    // Gráfico epidemiología
+    const anios = [2018, 2019, 2020, 2021, 2022, 2023, 2024];
+    const Prevalencia = [38.03, 37.59, 46.33, 52.75, 57.53, 63.03, 80.45];
+    const Mortalidad = [4.04, 3.75, 4.76, 6.03, 5.88, 6.18, 7.04];
+
+    Plotly.newPlot('graficoEpidemiologia', [
+      {x: anios, y: Prevalencia, mode: 'lines+markers', name: 'Prevalencia', line:{color:'#1e3a8a'}},
+      {x: anios, y: Mortalidad, mode: 'lines+markers', name: 'Mortalidad', line:{color:'#e11d48'}}
+    ], {
+      title: 'Tendencias epidemiológicas en Colombia (2018–2024)',
+      xaxis:{title:'Año'},
+      yaxis:{title:'Casos por 100.000 habitantes'},
+      legend:{orientation:'h', y:-0.2}
+    });
+
+    // Cálculos
+    function calcularBSA(peso, talla) {
+      return Math.sqrt((peso * talla) / 3600);
+    }
+
+    function calcular() {
+      const peso = parseFloat(document.getElementById('peso').value);
+      const talla = parseFloat(document.getElementById('talla').value);
+      const numPacientes = parseInt(document.getElementById('numPacientes').value);
+
+      const dosisErb = parseFloat(document.getElementById('dosisErbitux').value);
+      const precioErb100 = parseFloat(document.getElementById('precioErb100').value);
+      const bsa = calcularBSA(peso, talla);
+      const mgErb = bsa * dosisErb;
+      const contenidoVialErb = parseFloat(document.getElementById('contenidoVialErb').value);
+      const vialesErb = Math.ceil(mgErb / contenidoVialErb);
+      const costoErb = vialesErb * precioErb100 * 2 * 8;
+
+      const dosisVec = parseFloat(document.getElementById('dosisVectibix').value);
+      const precioVec100 = parseFloat(document.getElementById('precioVec100').value);
+      const mgVec = peso * dosisVec;
+      const vialesVec = Math.ceil(mgVec / 100);
+      const costoVec = vialesVec * precioVec100 * 2 * 8;
+
+      document.getElementById('resErbitux').innerHTML = `<b>Costo total:</b> ${costoErb.toLocaleString()}`;
+      document.getElementById('resVectibix').innerHTML = `<b>Costo total:</b> ${costoVec.toLocaleString()}`;
+
+      Plotly.newPlot('graficoPaciente', [{
+        x: ['Erbitux','Vectibix'],
+        y: [costoErb, costoVec],
+        type: 'bar',
+        marker:{color:['#3b82f6','#1e3a8a']}
+      }], {title:'Costo por paciente (8 meses)'});
+
+      Plotly.newPlot('graficoCohorte', [{
+        x: ['Erbitux','Vectibix'],
+        y: [costoErb * numPacientes, costoVec * numPacientes],
+        type: 'bar',
+        marker:{color:['#3b82f6','#1e3a8a']}
+      }], {title:`Costo total (${numPacientes} pacientes, 8 meses)`});
+    }
+  </script>
+</body>
+</html>
